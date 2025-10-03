@@ -1,0 +1,27 @@
+{
+    "name": "RC_actie",
+    "description": "",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "microphone": "*",
+        "RemoteControlMapping": "github:RoboraceMSW/RemoteControlMapping#419039325cb0c9a36d6ee7ad7b8c03b99c14a80d",
+        "maqueen": "github:ousiris/pxt-maqueen#d8f23e36c954b0ece8a4bc60204cd0b33163c226"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "8.0.16",
+        "targetId": "microbit"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
+}
