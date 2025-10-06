@@ -77,6 +77,7 @@ function richtingaanwijzer (num: number) {
     }
 }
 input.onSound(DetectedSound.Loud, function () {
+    basic.showIcon(IconNames.Chessboard)
     if (ccw == 1) {
         basic.showArrow(ArrowNames.East)
         Maqueen_V5.setRgbchange(Maqueen_V5.DirectionType.All, Maqueen_V5.SpeedGrade.speed4)
@@ -102,17 +103,36 @@ let herhaal = 0
 serial.redirectToUSB()
 Maqueen_V5.I2CInit()
 IR.IR_init()
+let strip = neopixel.create(DigitalPin.P15, 4, NeoPixelMode.RGB)
+input.setSoundThreshold(SoundThreshold.Loud, 248)
 Afstandsbediening.init_rc_hx1838()
 herhaal = 3
 basic.showString("IR RC")
 ccw = 1
+input.setAccelerometerRange(AcceleratorRange.OneG)
 basic.forever(function () {
 	
 })
 basic.forever(function () {
+    if (Math.abs(input.acceleration(Dimension.Z)) > 700) {
+        strip.showColor(neopixel.colors(NeoPixelColors.Red))
+        music.play(music.stringPlayable("C C5 C C5 C C5 C C5 ", 250), music.PlaybackMode.UntilDone)
+    }
+    basic.pause(2 * 500)
+    strip.clear()
+    strip.show()
+})
+basic.forever(function () {
+    if (Maqueen_V5.Ultrasonic() < 15) {
+        music.ringTone(1200 - Maqueen_V5.Ultrasonic() * 40)
+    }
+    music.stopAllSounds()
+})
+basic.forever(function () {
     serial.writeValue("Linkslicht", Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Left))
-    serial.writeValue("Rechtslicht", Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Right))
-    if (Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Left) + Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Right) > 2048) {
+    serial.writeValue("mg", Math.abs(input.acceleration(Dimension.Z)))
+    serial.writeValue("dB", input.soundLevel())
+    if (Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Left) + Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Right) > 3000) {
         if (Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Left) < Maqueen_V5.readLightIntensity(Maqueen_V5.DirectionType2.Right) + 200) {
             Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)
             Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 0)
