@@ -102,27 +102,28 @@ function afstand_en_geluid () {
     }
 }
 function IR_action () {
-    if (IR.IR_read() == Afstandsbediening.een()) {
+    IRcode = IR.IR_read()
+    if (IRcode == Afstandsbediening.een()) {
         herhaal = 1
         basic.showString("1x")
     }
-    if (IR.IR_read() == Afstandsbediening.twee()) {
+    if (IRcode == Afstandsbediening.twee()) {
         herhaal = 2
         basic.showString("2x")
     }
-    if (IR.IR_read() == Afstandsbediening.drie()) {
+    if (IRcode == Afstandsbediening.drie()) {
         herhaal = 3
         basic.showString("3x")
     }
-    if (IR.IR_read() == Afstandsbediening.vier()) {
+    if (IRcode == Afstandsbediening.vier()) {
         herhaal = 4
         basic.showString("4x")
     }
-    if (IR.IR_read() == Afstandsbediening.vijf()) {
+    if (IRcode == Afstandsbediening.vijf()) {
         herhaal = 5
         basic.showString("5x")
     }
-    if (IR.IR_read() == Afstandsbediening.op()) {
+    if (IRcode == Afstandsbediening.op()) {
         basic.showArrow(ArrowNames.North)
         Maqueen_V5.setRgblLed(Maqueen_V5.DirectionType.All, Maqueen_V5.CarLightColors.Green)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 100)
@@ -130,7 +131,7 @@ function IR_action () {
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
         Maqueen_V5.setRgbOff(Maqueen_V5.DirectionType.All)
     }
-    if (IR.IR_read() == Afstandsbediening.neer()) {
+    if (IRcode == Afstandsbediening.neer()) {
         basic.showArrow(ArrowNames.South)
         Maqueen_V5.setRgblLed(Maqueen_V5.DirectionType.All, Maqueen_V5.CarLightColors.Blue)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CCW, 100)
@@ -138,35 +139,35 @@ function IR_action () {
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
         Maqueen_V5.setRgbOff(Maqueen_V5.DirectionType.All)
     }
-    if (IR.IR_read() == Afstandsbediening.links()) {
+    if (IRcode == Afstandsbediening.links()) {
         basic.showArrow(ArrowNames.East)
         richtingaanwijzer(0)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)
         basic.pause(herhaal * 500)
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
     }
-    if (IR.IR_read() == Afstandsbediening.rechts()) {
+    if (IRcode == Afstandsbediening.rechts()) {
         basic.showArrow(ArrowNames.West)
         richtingaanwijzer(1)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)
         basic.pause(herhaal * 500)
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
     }
-    if (IR.IR_read() == Afstandsbediening.ster()) {
+    if (IRcode == Afstandsbediening.ster()) {
         basic.showArrow(ArrowNames.NorthWest)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CCW, 100)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 100)
         basic.pause(herhaal * 500)
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
     }
-    if (IR.IR_read() == Afstandsbediening.hekje()) {
+    if (IRcode == Afstandsbediening.hekje()) {
         basic.showArrow(ArrowNames.NorthEast)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 100)
         Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CCW, 100)
         basic.pause(herhaal * 500)
         Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
     }
-    if (IR.IR_read() == Afstandsbediening.ok()) {
+    if (IRcode == Afstandsbediening.ok()) {
         basic.showIcon(IconNames.Yes)
         music.play(music.stringPlayable("C5 A F F E G A B ", 264), music.PlaybackMode.UntilDone)
     }
@@ -183,6 +184,7 @@ function average (afstand: number) {
 }
 // Kennismakingsprogramma om sensoren en actuatoren te leren kennen
 let som = 0
+let IRcode = 0
 let avtone = 0
 let toon = 0
 let afstand = 0
