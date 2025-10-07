@@ -72,6 +72,7 @@ function init () {
     strip = neopixel.create(DigitalPin.P15, 4, NeoPixelMode.RGB)
     Afstandsbediening.init_rc_hx1838()
     herhaal = 3
+    volglijn = 0
     basic.showString("IR RC")
     ccw = 1
     input.setAccelerometerRange(AcceleratorRange.OneG)
@@ -180,12 +181,54 @@ function IR_action () {
                         if (IRcode == Afstandsbediening.ok()) {
                             basic.showIcon(IconNames.Yes)
                             music.play(music.stringPlayable("C5 A F F E G A B ", 264), music.PlaybackMode.UntilDone)
+                        } else {
+                            if (IRcode == Afstandsbediening.acht()) {
+                                volglijn = 1
+                                basic.showString("VL")
+                            } else if (IRcode == Afstandsbediening.nul()) {
+                                volglijn = 0
+                                basic.showString("NV")
+                            }
                         }
                     }
                 }
             }
         }
         basic.showIcon(IconNames.Diamond)
+    }
+}
+function Volglijn () {
+    fullspeed = 50
+    lowspeed = 10
+    if (volglijn) {
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, fullspeed)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, fullspeed)
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, lowspeed)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 0 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, fullspeed)
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, 0)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, lowspeed)
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, fullspeed)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 1 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 0 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, 0)
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, fullspeed)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 0 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M1, Maqueen_V5.Dir.CW, lowspeed)
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.M2, Maqueen_V5.Dir.CW, fullspeed)
+        }
+        if (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0 && (Maqueen_V5.readPatrol(Maqueen_V5.Patrol.M) == 1 && Maqueen_V5.readPatrol(Maqueen_V5.Patrol.L) == 0)) {
+            Maqueen_V5.motorRun(Maqueen_V5.Motors.All, Maqueen_V5.Dir.CW, 100)
+        }
+    } else {
+        Maqueen_V5.motorStop(Maqueen_V5.Motors.All)
     }
 }
 function average (afstand: number) {
@@ -199,11 +242,14 @@ function average (afstand: number) {
 }
 // Kennismakingsprogramma om sensoren en actuatoren te leren kennen
 let som = 0
+let lowspeed = 0
+let fullspeed = 0
 let IRcode = 0
 let avtone = 0
 let toon = 0
 let afstand = 0
 let lijst: number[] = []
+let volglijn = 0
 let herhaal = 0
 let ccw = 0
 let strip: neopixel.Strip = null
@@ -220,4 +266,7 @@ basic.forever(function () {
 })
 basic.forever(function () {
     botsdetectie()
+})
+basic.forever(function () {
+    Volglijn()
 })
