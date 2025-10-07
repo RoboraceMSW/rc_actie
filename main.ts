@@ -32,6 +32,9 @@ function echo_serieel () {
     serial.writeValue("x", input.magneticForce(Dimension.X))
     serial.writeValue("y", input.magneticForce(Dimension.Y))
     serial.writeValue("z", input.magneticForce(Dimension.Z))
+    serial.writeValue("LineL", Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.R))
+    serial.writeValue("LineM", Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.M))
+    serial.writeValue("LineR", Maqueen_V5.readPatrolData(Maqueen_V5.Patrol.R))
 }
 function richtingaanwijzer (num: number) {
     if (num == 0) {
@@ -65,6 +68,7 @@ function lawaai () {
 function init () {
     serial.redirectToUSB()
     IR.IR_init()
+    Maqueen_V5.patrolling(Maqueen_V5.Patrolling.ON)
     strip = neopixel.create(DigitalPin.P15, 4, NeoPixelMode.RGB)
     Afstandsbediening.init_rc_hx1838()
     herhaal = 3
