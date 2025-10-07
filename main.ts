@@ -207,7 +207,13 @@ Maqueen_V5.I2CInit()
 init()
 basic.forever(function () {
     echo_serieel()
+})
+basic.forever(function () {
     volg_licht()
+})
+basic.forever(function () {
     afstand_en_geluid()
+})
+basic.forever(function () {
     botsdetectie()
 })
